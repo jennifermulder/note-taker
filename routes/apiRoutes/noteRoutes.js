@@ -1,5 +1,5 @@
 const { filterByQuery, findById, createNewNote, validateNote } = require('../../lib/notes.js');
-const { notes } = require('../../db/db.json');
+const { notes } = require('../../db/db');
 const router = require('express').Router();
 
 //add route. (req is an object)
@@ -27,12 +27,12 @@ router.post('/notes', (req, res) => {
     req.body.id = notes.length.toString();
 
     // if any data in req.body is incorrect, send 400 error back
-    if (!validateNotes(req.body)) {
+    if (!validateNote(req.body)) {
         //user error not server error. sends status to user
         res.status(400).send('The note is not properly formatted.');
     } else {
         // add note to json file and animals array in this function
-        const note = createNewNote(req.body, notess);
+        const note = createNewNote(req.body, notes);
         res.json(note);
     }
 
@@ -41,5 +41,26 @@ router.post('/notes', (req, res) => {
     //sends data back to client
     res.json(note);
 });
+
+// //client requesting the server to remove data
+// router.delete('/notes', (req, res) => {
+//     // set id based on what the next index of the array will be
+//     req.body.id = notes.length.toString();
+
+//     // if any data in req.body is incorrect, send 400 error back
+//     if (!validateNotes(req.body)) {
+//         //user error not server error. sends status to user
+//         res.status(400).send('The note is not properly formatted.');
+//     } else {
+//         // add note to json file and animals array in this function
+//         const note = deleteNote(req.body, notes);
+//         res.json(note);
+//     }
+
+//     // // req.body is where our incoming content will be
+//     // console.log(req.body);
+//     //sends data back to client
+//     res.json(note);
+// });
 
 module.exports = router;
