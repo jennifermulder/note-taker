@@ -39,7 +39,7 @@ router.post('/notes', (req, res) => {
     // // req.body is where our incoming content will be
     // console.log(req.body);
     //sends data back to client
-    res.json(note);
+    // res.json(note);
 });
 
 // //client requesting the server to remove data
