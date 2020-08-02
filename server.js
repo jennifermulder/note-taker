@@ -1,11 +1,23 @@
 const express = require('express');
+
+const fs = require('fs');
+const path = require('path');
+
+var dbPath = path.join(__dirname, 'db/db.json');
+
+if (!fs.existsSync(dbPath)) {
+    fs.mkdirSync(path.join(__dirname,'db'), { recursive: true }); 
+    fs.writeFileSync(
+        dbPath,
+        //to save file to JSON - null = dont edit any existing data - 2 create white space between values to make it readable
+        JSON.stringify({ notes: [] }, null, 2)
+    );
+}
+
 const { notes } = require('./db/db.json');
 
 const apiRoutes = require('./routes/apiRoutes');
 const htmlRoutes = require('./routes/htmlRoutes');
-
-const fs = require('fs');
-const path = require('path');
 
 const PORT = process.env.PORT || 3002;
 
