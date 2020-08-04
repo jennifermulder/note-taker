@@ -5,8 +5,9 @@ const path = require('path');
 
 var dbPath = path.join(__dirname, 'db/db.json');
 
+//if db.json does not currently exist, create dir/ dir and json
 if (!fs.existsSync(dbPath)) {
-    fs.mkdirSync(path.join(__dirname,'db'), { recursive: true }); 
+    fs.mkdirSync(path.join(__dirname, 'db'), { recursive: true });
     fs.writeFileSync(
         dbPath,
         //to save file to JSON - null = dont edit any existing data - 2 create white space between values to make it readable

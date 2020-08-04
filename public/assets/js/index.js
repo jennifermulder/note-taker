@@ -3,13 +3,12 @@ var $noteText = $(".note-textarea");
 var $saveNoteBtn = $(".save-note");
 var $newNoteBtn = $(".new-note");
 var $noteList = $(".list-container .list-group");
-// var $delBtn = $(".delete-note");
 
 // activeNote is used to keep track of the note in the textarea
 var activeNote = {};
 
 // A function for getting all notes from the db
-var getNotes = function() {
+var getNotes = function () {
   return $.ajax({
     url: "/api/notes",
     method: "GET"
@@ -17,7 +16,7 @@ var getNotes = function() {
 };
 
 // A function for saving a note to the db
-var saveNote = function(note) {
+var saveNote = function (note) {
   return $.ajax({
     url: "/api/notes",
     data: note,
@@ -25,22 +24,21 @@ var saveNote = function(note) {
   });
 };
 
-// BONUS A function for deleting a note from the db
-var deleteNote = function(id) {
-  console.log('FRONT END DISPATCHING NOTE ID TO BE DELETED=>',id);
+// BONUS A function for deleting a note from the db. Front-End dispatching note ID to be deleted
+var deleteNote = function (id) {
   return $.ajax({
+    // find note by id
     url: "api/notes/" + id,
     method: "DELETE"
   })
-  .then(result => {
-    console.log("res", result)
-    return result;
-  });
+    .then(result => {
+      return result;
+    });
 
 };
 
 // If there is an activeNote, display it, otherwise render empty inputs
-var renderActiveNote = function() {
+var renderActiveNote = function () {
   $saveNoteBtn.hide();
 
   if (activeNote.id) {
@@ -57,20 +55,20 @@ var renderActiveNote = function() {
 };
 
 // Get the note data from the inputs, save it to the db and update the view
-var handleNoteSave = function() {
+var handleNoteSave = function () {
   var newNote = {
     title: $noteTitle.val(),
     text: $noteText.val()
   };
 
-  saveNote(newNote).then(function(data) {
+  saveNote(newNote).then(function (data) {
     getAndRenderNotes();
     renderActiveNote();
   });
 };
 
 // BONUS Delete the clicked note
-var handleNoteDelete = async function(event) {
+var handleNoteDelete = async function (event) {
   // prevents the click listener for the list from being called when the button inside of it is clicked
   event.stopPropagation();
 
@@ -81,30 +79,28 @@ var handleNoteDelete = async function(event) {
   if (activeNote.id === note.id) {
     activeNote = {};
   }
-
-  deleteNote(note.id).then(result =>{
-    console.log('RESULT from DELETE call=>',result)
+  // pass id chosen in function above, then return the update
+  deleteNote(note.id).then(result => {
+    //return the updated note list
     updateNoteList(result);
-  });// eventually I'm gonna happen don't wait up do 
-  
-
+  });
 };
 
 // Sets the activeNote and displays it
-var handleNoteView = function() {
+var handleNoteView = function () {
   activeNote = $(this).data();
   renderActiveNote();
 };
 
 // Sets the activeNote to and empty object and allows the user to enter a new note
-var handleNewNoteView = function() {
+var handleNewNoteView = function () {
   activeNote = {};
   renderActiveNote();
 };
 
 // If a note's title or text are empty, hide the save button
 // Or else show it
-var handleRenderSaveBtn = function() {
+var handleRenderSaveBtn = function () {
   if (!$noteTitle.val().trim() || !$noteText.val().trim()) {
     $saveNoteBtn.hide();
   } else {
@@ -115,7 +111,7 @@ var handleRenderSaveBtn = function() {
 var globalNotes = [];
 
 // Render's the list of note titles
-var renderNoteList = function(notes) {
+var renderNoteList = function (notes) {
   globalNotes = notes;
   $noteList.empty();
 
@@ -137,24 +133,20 @@ var renderNoteList = function(notes) {
   $noteList.append(noteListItems);
 };
 
-var updateNoteList = function(noteToFilterOut) {
-  console.log('NOTE THAT WAS JUST DELETED', noteToFilterOut);
-
-  const remainingNotes = globalNotes.filter(function(note) {return noteToFilterOut.body.id !== note.id});
-  // refresh the dom/ append the remaining notes to the dom
+//pass the note that was just selected for deletion into the function to filter the array
+var updateNoteList = function (noteToFilterOut) {
+  const remainingNotes = globalNotes.filter(function (note) { return noteToFilterOut.body.id !== note.id });
   renderNoteList(remainingNotes);
 }
 
 // Gets notes from the db and renders them to the sidebar
-var getAndRenderNotes = function() {
-  console.log('GETTING NEW NOTES=>');
-  return getNotes().then(function(data) {
-    console.log('FRESH* NOTES=>',data);
+var getAndRenderNotes = function () {
+  return getNotes().then(function (data) {
+    // generate note list when get request has been completed
     renderNoteList(data);
   });
 };
 
-// $delBtn.on("click", handleNoteDelete);
 $saveNoteBtn.on("click", handleNoteSave);
 $noteList.on("click", ".list-group-item", handleNoteView);
 $newNoteBtn.on("click", handleNewNoteView);
