@@ -34,7 +34,6 @@ var deleteNote = function (id) {
     .then(result => {
       return result;
     });
-
 };
 
 // If there is an activeNote, display it, otherwise render empty inputs
