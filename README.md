@@ -16,7 +16,7 @@ When the user clicks the link on the landing page, they are presented with their
 * Express.js
 
 ## Heroku
-https://note-taker-86753.herokuapp.com/notes
+https://note-taker-86753.herokuapp.com/
 
 ## Usage
 To run program: nodemon server.js
